@@ -9,6 +9,9 @@ from django.utils.translation import (trans_real as django_trans,
                                       ugettext as django_ugettext,
                                       ungettext as django_nugettext)
 
+VERSION = (0,2)
+__version__ = '.'.join(map(str, VERSION))
+
 
 def ugettext(message, context=None):
     """Always return a stripped string, localized if possible"""
