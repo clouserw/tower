@@ -79,7 +79,7 @@ def create_pounit(filename, lineno, message, comments):
         _, s = split_context(message[0])
         c, p = split_context(message[1])
         unit.setsource([s, p])
-        # Workaround for http://bugs.loctowertion.org/show_bug.cgi?id=1385
+        # Workaround for http://bugs.locamotion.org/show_bug.cgi?id=1385
         unit.target = [u"", u""]
     else:
         c, m = split_context(message)
