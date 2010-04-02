@@ -1,0 +1,43 @@
+msgid "this is a test"
+msgstr "you ran a test!"
+
+# Here is a comment
+#: some/file.py:157
+msgid "one light !"
+msgid_plural "many lights !"
+msgstr[0] "you found a light!"
+msgstr[1] "you found a pile of lights!"
+
+msgctxt "context_one"
+msgid "What time is it?"
+msgstr "What time is it? (context=1)"
+
+msgctxt "context_two"
+msgid "What time is it?"
+msgstr "What time is it? (context=2)"
+
+# %d is the number of dogs
+#: some/file.py:157
+#, python-format
+msgctxt "context_one"
+msgid "%d poodle please"
+msgid_plural "%d poodles please"
+msgstr[0] "%d poodle (context=1)"
+msgstr[1] "%d poodles (context=1)"
+
+# %d is the number of dogs
+#: some/file.py:157
+#, python-format
+msgctxt "context_two"
+msgid "%d poodle please"
+msgid_plural "%d poodles please"
+msgstr[0] "%d poodle (context=2)"
+msgstr[1] "%d poodles (context=2)"
+
+#, python-format
+msgid "Hello %(user)s"
+msgstr "Hola %(user)s"
+
+#, python-format
+msgid "Broken %(string)s"
+msgstr "Broken %(fuuu)s"

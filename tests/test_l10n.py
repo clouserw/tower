@@ -6,6 +6,7 @@ from cStringIO import StringIO
 from django.utils import translation
 
 import jingo
+from jingo.tests.test_helpers import render
 
 from nose import with_setup
 from nose.tools import eq_
@@ -35,26 +36,11 @@ n_lazy_strings['p_context'] = n_lazy('%d poodle please', '%d poodles please',
                                      3, 'context_one')
 
 
-# Stolen from jingo's test_helpers
-def render(s, context={}):
-    t = jingo.env.from_string(s)
-    return t.render(**context)
-
-
 def setup():
-    if not os.path.isdir(os.path.join(LOCALEDIR, 'LC_MESSAGES')):
-        os.makedirs(os.path.join(LOCALEDIR, 'LC_MESSAGES'))
-    fp = open(MOFILE, 'wb')
-    fp.write(base64.decodestring(MO_DATA))
-    fp.close()
-
     l10n.activate('xx')
 
 
 def teardown():
-    dir = os.path.dirname(LOCALEDIR)
-    if os.path.isdir(dir):
-        shutil.rmtree(dir)
     l10n.deactivate_all()
 
 
@@ -190,6 +176,16 @@ def test_template_substitution():
 
 
 @with_setup(setup, teardown)
+def test_template_substitution_crash():
+    s = '{% trans string="heart" %}Broken {{ string }}{% endtrans %}'
+    eq_(render(s), 'Broken heart')
+
+    # make sure the 'xx' locale still works
+    s = '{% trans user="wenzel" %} Hello {{ user }}{% endtrans %}'
+    eq_(render(s), 'Hola wenzel')
+
+
+@with_setup(setup, teardown)
 def test_template_gettext_functions():
     s = '{{ _("yy", "context") }}'
     eq_(render(s), 'yy')
@@ -220,63 +216,6 @@ def test_extract_tower_template():
     # god help you if these are ever unequal
     eq_(TEST_TEMPLATE_OUTPUT, unicode(create_pofile_from_babel(output)))
 
-
-MO_DATA = '''\
-3hIElQAAAAAHAAAAHAAAAFQAAAALAAAAjAAAAA4AAAC4AAAALgAAAMcAAAAcAAAA9gAAAC4AAAAT
-AQAAHAAAAEIBAAAZAAAAXwEAAA4AAAB5AQAADQAAAIgBAAAsAAAAlgEAABwAAADDAQAALAAAAOAB
-AAAcAAAADQIAAC4AAAAqAgAADwAAAFkCAAACAAAAAAAAAAAAAAAFAAAABgAAAAMAAAAAAAAABAAA
-AAAAAAABAAAABwAAAEhlbGxvICUodXNlcilzAGNvbnRleHRfb25lBCVkIHBvb2RsZSBwbGVhc2UA
-JWQgcG9vZGxlcyBwbGVhc2UAY29udGV4dF9vbmUEV2hhdCB0aW1lIGlzIGl0PwBjb250ZXh0X3R3
-bwQlZCBwb29kbGUgcGxlYXNlACVkIHBvb2RsZXMgcGxlYXNlAGNvbnRleHRfdHdvBFdoYXQgdGlt
-ZSBpcyBpdD8Ab25lIGxpZ2h0ICEAbWFueSBsaWdodHMgIQB0aGlzIGlzIGEgdGVzdABIb2xhICUo
-dXNlcilzACVkIHBvb2RsZSAoY29udGV4dD0xKQAlZCBwb29kbGVzIChjb250ZXh0PTEpAFdoYXQg
-dGltZSBpcyBpdD8gKGNvbnRleHQ9MSkAJWQgcG9vZGxlIChjb250ZXh0PTIpACVkIHBvb2RsZXMg
-KGNvbnRleHQ9MikAV2hhdCB0aW1lIGlzIGl0PyAoY29udGV4dD0yKQB5b3UgZm91bmQgYSBsaWdo
-dCEAeW91IGZvdW5kIGEgcGlsZSBvZiBsaWdodHMhAHlvdSByYW4gYSB0ZXN0IQA=
-'''
-
-# MO_DATA was created with this data.  You can also run `msgunfmt filename`
-'''
-msgid "this is a test"
-msgstr "you ran a test!"
-
-# Here is a comment
-#: some/file.py:157
-msgid "one light !"
-msgid_plural "many lights !"
-msgstr[0] "you found a light!"
-msgstr[1] "you found a pile of lights!"
-
-msgctxt "context_one"
-msgid "What time is it?"
-msgstr "What time is it? (context=1)"
-
-msgctxt "context_two"
-msgid "What time is it?"
-msgstr "What time is it? (context=2)"
-
-# %d is the number of dogs
-#: some/file.py:157
-#, python-format
-msgctxt "context_one"
-msgid "%d poodle please"
-msgid_plural "%d poodles please"
-msgstr[0] "%d poodle (context=1)"
-msgstr[1] "%d poodles (context=1)"
-
-# %d is the number of dogs
-#: some/file.py:157
-#, python-format
-msgctxt "context_two"
-msgid "%d poodle please"
-msgid_plural "%d poodles please"
-msgstr[0] "%d poodle (context=2)"
-msgstr[1] "%d poodles (context=2)"
-
-#, python-format
-msgid "Hello %(user)s"
-msgstr "Hola %(user)s"
-'''
 
 TEST_PO_INPUT = """
 # Make sure multiple contexts stay separate
