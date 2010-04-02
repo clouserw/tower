@@ -1,5 +1,5 @@
 from babel.messages.extract import extract
-from l10n.management.commands.extract import (DEFAULT_KEYWORDS,
+from tower.management.commands.extract import (DEFAULT_KEYWORDS,
                                               COMMENT_TAGS,
                                               OPTIONS_MAP)
 

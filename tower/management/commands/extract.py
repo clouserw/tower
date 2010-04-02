@@ -13,7 +13,7 @@ from babel.messages.extract import (DEFAULT_KEYWORDS, extract_from_dir,
                                     extract_python)
 from translate.storage import po
 
-from l10n import strip_whitespace, add_context, split_context
+from tower import strip_whitespace, add_context, split_context
 
 DEFAULT_DOMAIN = 'all'
 

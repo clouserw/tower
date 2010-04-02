@@ -1,7 +1,7 @@
 import jinja2
 from jinja2.ext import InternationalizationExtension
 
-from l10n import strip_whitespace
+from tower import strip_whitespace
 
 
 @jinja2.contextfunction

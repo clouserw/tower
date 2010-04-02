@@ -11,15 +11,15 @@ from jingo.tests.test_helpers import render
 from nose import with_setup
 from nose.tools import eq_
 
-import l10n
-from tests.helpers import fake_extract_from_dir
-from l10n import ugettext as _, ungettext as n_
-from l10n import ugettext_lazy as _lazy, ungettext_lazy as n_lazy
-from l10n.management.commands.extract import create_pofile_from_babel
+import tower
+from tower.tests.helpers import fake_extract_from_dir
+from tower import ugettext as _, ungettext as n_
+from tower import ugettext_lazy as _lazy, ungettext_lazy as n_lazy
+from tower.management.commands.extract import create_pofile_from_babel
 
-import tower.settings as settings
+settings = __import__('tower-project.settings')
 
-LOCALEDIR = os.path.join(settings.path('locale'), 'xx')
+LOCALEDIR = os.path.join(settings.settings.path('locale'), 'xx')
 MOFILE = os.path.join(LOCALEDIR, 'LC_MESSAGES', 'messages.mo')
 
 # Used for the _lazy() tests
@@ -37,11 +37,11 @@ n_lazy_strings['p_context'] = n_lazy('%d poodle please', '%d poodles please',
 
 
 def setup():
-    l10n.activate('xx')
+    tower.activate('xx')
 
 
 def teardown():
-    l10n.deactivate_all()
+    tower.deactivate_all()
 
 
 @with_setup(setup, teardown)
@@ -113,19 +113,19 @@ def test_ungettext_lazy():
 
 
 def test_add_context():
-    eq_("nacho\x04testo", l10n.add_context("nacho", "testo"))
+    eq_("nacho\x04testo", tower.add_context("nacho", "testo"))
 
 
 def test_split_context():
-    eq_(["", u"testo"], l10n.split_context("testo"))
-    eq_([u"nacho", u"testo"], l10n.split_context("nacho\x04testo"))
+    eq_(["", u"testo"], tower.split_context("testo"))
+    eq_([u"nacho", u"testo"], tower.split_context("nacho\x04testo"))
 
 
 def test_activate():
-    l10n.deactivate_all()
-    l10n.activate('xx')
+    tower.deactivate_all()
+    tower.activate('xx')
     eq_(_('this is a test'), 'you ran a test!')
-    l10n.deactivate_all()
+    tower.deactivate_all()
 
 
 def test_cached_activate():
@@ -133,18 +133,18 @@ def test_cached_activate():
     Make sure the locale is always activated properly, even when we hit a
     cached version.
     """
-    l10n.deactivate_all()
-    l10n.activate('fr')
+    tower.deactivate_all()
+    tower.activate('fr')
     eq_(translation.get_language(), 'fr')
-    l10n.activate('fa')
+    tower.activate('fa')
     eq_(translation.get_language(), 'fa')
-    l10n.activate('fr')
+    tower.activate('fr')
     eq_(translation.get_language(), 'fr')
-    l10n.activate('de')
+    tower.activate('de')
     eq_(translation.get_language(), 'de')
-    l10n.activate('fr')
+    tower.activate('fr')
     eq_(translation.get_language(), 'fr')
-    l10n.activate('fa')
+    tower.activate('fa')
     eq_(translation.get_language(), 'fa')
 
 
@@ -199,7 +199,7 @@ def test_template_gettext_functions():
 
 def test_extract_tower_python():
     fileobj = StringIO(TEST_PO_INPUT)
-    method = 'l10n.management.commands.extract.extract_tower_python'
+    method = 'tower.management.commands.extract.extract_tower_python'
     output = fake_extract_from_dir(filename="filename", fileobj=fileobj,
                                    method=method)
 
@@ -209,7 +209,7 @@ def test_extract_tower_python():
 
 def test_extract_tower_template():
     fileobj = StringIO(TEST_TEMPLATE_INPUT)
-    method = 'l10n.management.commands.extract.extract_tower_template'
+    method = 'tower.management.commands.extract.extract_tower_template'
     output = fake_extract_from_dir(filename="filename", fileobj=fileobj,
                                    method=method)
 

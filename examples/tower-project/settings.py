@@ -19,7 +19,7 @@ INSTALLED_APPS = (
 def JINJA_CONFIG():
     import jinja2
     from django.conf import settings
-    config = {'extensions': ['l10n.template.i18n',
+    config = {'extensions': ['tower.template.i18n',
                              'jinja2.ext.with_', 'jinja2.ext.loopcontrols'],
               'finalize': lambda x: x if x is not None else ''}
     return config
