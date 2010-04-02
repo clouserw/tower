@@ -1,11 +1,8 @@
 from setuptools import setup
 
-import tower
-
-
 setup(
     name='tower',
-    version=tower.__version__,
+    version='0.3',
     description='Pull strings from a variety of sources, collapse whitespace, '
                 'support context (msgctxt), and merging .pot files.',
     long_description=open('README.rst').read(),
