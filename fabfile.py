@@ -21,6 +21,8 @@ env.hosts = ['localhost']
 
 local = functools.partial(local, capture=False)
 
+def shell():
+    local('django-admin.py shell')
 
 def test():
     local('django-admin.py test')

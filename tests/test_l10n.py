@@ -16,7 +16,9 @@ from l10n import ugettext as _, ungettext as n_
 from l10n import ugettext_lazy as _lazy, ungettext_lazy as n_lazy
 from l10n.management.commands.extract import create_pofile_from_babel
 
-LOCALEDIR = os.path.join('locale', 'xx')
+import tower.settings as settings
+
+LOCALEDIR = os.path.join(settings.path('locale'), 'xx')
 MOFILE = os.path.join(LOCALEDIR, 'LC_MESSAGES', 'messages.mo')
 
 # Used for the _lazy() tests
@@ -50,8 +52,9 @@ def setup():
 
 
 def teardown():
-    if os.path.isdir('locale'):
-        shutil.rmtree('locale')
+    dir = os.path.dirname(LOCALEDIR)
+    if os.path.isdir(dir):
+        shutil.rmtree(dir)
     l10n.deactivate_all()
 
 
@@ -134,11 +137,8 @@ def test_split_context():
 
 def test_activate():
     l10n.deactivate_all()
-    l10n.activate('fr')
-    # This string is from the AMO .po file
-    a_text = "My Account"
-    p_text = "Mon compte"
-    eq_(p_text, _(a_text))
+    l10n.activate('xx')
+    eq_(_('this is a test'), 'you ran a test!')
     l10n.deactivate_all()
 
 
@@ -150,16 +150,16 @@ def test_cached_activate():
     l10n.deactivate_all()
     l10n.activate('fr')
     eq_(translation.get_language(), 'fr')
-    l10n.activate('vi')
-    eq_(translation.get_language(), 'vi')
+    l10n.activate('fa')
+    eq_(translation.get_language(), 'fa')
     l10n.activate('fr')
     eq_(translation.get_language(), 'fr')
     l10n.activate('de')
     eq_(translation.get_language(), 'de')
     l10n.activate('fr')
     eq_(translation.get_language(), 'fr')
-    l10n.activate('vi')
-    eq_(translation.get_language(), 'vi')
+    l10n.activate('fa')
+    eq_(translation.get_language(), 'fa')
 
 
 @with_setup(setup, teardown)
