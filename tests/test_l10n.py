@@ -201,9 +201,9 @@ def test_template_gettext_functions():
     eq_(render(s), '1')
 
 
-def test_extract_amo_python():
+def test_extract_tower_python():
     fileobj = StringIO(TEST_PO_INPUT)
-    method = 'l10n.management.commands.extract.extract_amo_python'
+    method = 'l10n.management.commands.extract.extract_tower_python'
     output = fake_extract_from_dir(filename="filename", fileobj=fileobj,
                                    method=method)
 
@@ -211,9 +211,9 @@ def test_extract_amo_python():
     eq_(TEST_PO_OUTPUT, unicode(create_pofile_from_babel(output)))
 
 
-def test_extract_amo_template():
+def test_extract_tower_template():
     fileobj = StringIO(TEST_TEMPLATE_INPUT)
-    method = 'l10n.management.commands.extract.extract_amo_template'
+    method = 'l10n.management.commands.extract.extract_tower_template'
     output = fake_extract_from_dir(filename="filename", fileobj=fileobj,
                                    method=method)
 
