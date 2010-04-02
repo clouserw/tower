@@ -95,7 +95,13 @@ def create_pounit(filename, lineno, message, comments):
 
 
 def create_pofile_from_babel(extracted):
-    catalog = po.pofile(inputfile="")
+    try:
+        if settings.TOWER_ADD_HEADERS:
+            catalog = po.pofile()
+        else:
+            catalog = po.pofile(inputfile="")
+    except AttributeError:
+        catalog = po.pofile(inputfile="")
     for filename, lineno, message, comments in extracted:
         unit = create_pounit(filename, lineno, message, comments)
         catalog.addunit(unit)
