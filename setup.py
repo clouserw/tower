@@ -1,11 +1,11 @@
 from setuptools import setup
 
-import l10n
+import tower
 
 
 setup(
     name='tower',
-    version=l10n.__version__,
+    version=tower.__version__,
     description='Pull strings from a variety of sources, collapse whitespace, '
                 'support context (msgctxt), and merging .pot files.',
     long_description=open('README.rst').read(),
@@ -13,7 +13,7 @@ setup(
     author_email='wclouser@mozilla.com',
     url='http://github.com/clouserw/tower',
     license='BSD',
-    packages=['l10n'],
+    packages=['tower'],
     include_package_data=True,
     zip_safe=False,
     classifiers=[
