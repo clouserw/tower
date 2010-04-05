@@ -17,11 +17,6 @@ from tower import ugettext as _, ungettext as n_
 from tower import ugettext_lazy as _lazy, ungettext_lazy as n_lazy
 from tower.management.commands.extract import create_pofile_from_babel
 
-settings = __import__('tower-project.settings')
-
-LOCALEDIR = os.path.join(settings.settings.path('locale'), 'xx')
-MOFILE = os.path.join(LOCALEDIR, 'LC_MESSAGES', 'messages.mo')
-
 # Used for the _lazy() tests
 _lazy_strings = {}
 _lazy_strings['nocontext'] = _lazy('this is a test')
@@ -172,16 +167,6 @@ def test_template_substitution():
             \t\r\n
             {{ user }}
             {% endtrans %}'''
-    eq_(render(s), 'Hola wenzel')
-
-
-@with_setup(setup, teardown)
-def test_template_substitution_crash():
-    s = '{% trans string="heart" %}Broken {{ string }}{% endtrans %}'
-    eq_(render(s), 'Broken heart')
-
-    # make sure the 'xx' locale still works
-    s = '{% trans user="wenzel" %} Hello {{ user }}{% endtrans %}'
     eq_(render(s), 'Hola wenzel')
 
 
