@@ -1,3 +1,4 @@
+import copy
 import gettext
 import re
 
@@ -101,8 +102,13 @@ def _activate(locale):
     # Django's activate() simply calls translation() and adds it to a global.
     # We'll do the same here, first calling django's translation() so it can
     # do everything it needs to do, and then calling gettext directly to
-    # load the rest.
-    t = django_trans.translation(locale)
+    # load the rest.  We make a deepcopy because Django will return the en-US
+    # catalog if it doesn't have a locale (but we do).  We don't want to merge
+    # our foreign catalog into en-US.  Since Django stuck the en-US catalog
+    # into its cache for this locale, we have to update that too.
+    t = copy.deepcopy(django_trans.translation(locale))
+    t.set_language(locale)
+    django_trans._translations[locale] = t
     try:
         """When trying to load css, js, and images through the Django server
         gettext() throws an exception saying it can't find the .mo files.  I
