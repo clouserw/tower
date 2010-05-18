@@ -93,6 +93,7 @@ def _activate(locale):
     # them, this is the place to do it.  We'll also need to implement our own
     # caching since the _translations stuff is built on a per locale basis,
     # not per locale + some key
+    locale = django_trans.to_locale(locale)
 
     # Django caches the translation objects here
     t = django_trans._translations.get(locale, None)
