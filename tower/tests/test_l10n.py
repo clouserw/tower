@@ -169,6 +169,22 @@ def test_template_substitution():
             {% endtrans %}'''
     eq_(render(s), 'Hola wenzel')
 
+@with_setup(setup, teardown)
+def test_template_substitution_with_pluralization():
+    s = '''{% trans count=1 %}
+                one light !
+            {% pluralize %}
+                many lights !
+            {% endtrans %}'''
+    eq_(render(s), 'you found a light!')
+
+    s = '''{% trans count=8 %}
+                one light !
+            {% pluralize %}
+                many lights !
+            {% endtrans %}'''
+    eq_(render(s), 'you found a pile of lights!')
+
 
 @with_setup(setup, teardown)
 def test_template_gettext_functions():
