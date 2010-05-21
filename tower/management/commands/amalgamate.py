@@ -9,6 +9,10 @@ from manage import settings
 
 from translate.tools import pypo2phppo
 
+try:
+    standalone_domains = settings.STANDALONE_DOMAINS
+except AttributeError:
+    standalone_domains = ['javascript']
 
 class Command(BaseCommand):
     """
@@ -22,11 +26,9 @@ class Command(BaseCommand):
 
         z_keys = os.path.join(locale_dir, 'z-keys.pot')
         r_keys = os.path.join(locale_dir, 'r-keys.pot')
-        z_js_keys = os.path.join(locale_dir, 'z-javascript.pot')
 
         if not (os.path.isfile(z_keys) or
-                os.path.isfile(r_keys) or
-                os.path.isfile(z_js_keys)):
+                os.path.isfile(r_keys)):
             sys.exit("Can't find .pot files")
 
         # Step 1: Convert the zamboni .pot file to php format
@@ -84,48 +86,54 @@ class Command(BaseCommand):
 
             p2.communicate()
 
-        # Step 4: Merge the zamboni JS files to each locale.  We duplicate a
+        # Step 4: Merge the standalone files to each locale.  We duplicate a
         # little code here, but I think it keeps it simpler than sticking these
         # commands in the middle of Step 3.
-        print "Merging JavaScript strings to each locale..."
-        for locale in os.listdir(locale_dir):
-            if (not os.path.isdir(os.path.join(locale_dir, locale)) or
-                locale.startswith('.')):
-                        continue
+        for domain in standalone_domains:
 
-            z_js_messages = os.path.join(locale_dir, locale, 'LC_MESSAGES',
-                                         'z-javascript.po')
+            print "Merging %s strings to each locale..." % domain
+            z_domain_keys = os.path.join(locale_dir, 'z-%s.pot' % domain)
+            if not os.path.isfile(z_domain_keys):
+                sys.exit("Can't find z-%s.pot" % domain)
 
-            if not os.path.isfile(z_js_messages):
-                print " Can't find (%s).  Creating..." % (z_js_messages)
-                t = open(z_js_messages, 'w')
-                t.close()
-                continue
+            for locale in os.listdir(locale_dir):
+                if (not os.path.isdir(os.path.join(locale_dir, locale)) or
+                    locale.startswith('.')):
+                            continue
 
-            print "Merging z-javascript.po for %s" % (locale)
+                z_domain_messages = os.path.join(locale_dir, locale, 'LC_MESSAGES',
+                                                 'z-%s.po' % domain)
 
-            z_js_keys_file = open(z_js_keys)
+                if not os.path.isfile(z_domain_messages):
+                    print " Can't find (%s).  Creating..." % (z_domain_messages)
+                    t = open(z_domain_messages, 'w')
+                    t.close()
 
-            if locale == "en_US":
-                enmerged = TemporaryFile('w+t')
-                p3 = Popen(["msgen", "-"], stdin=z_js_keys_file,
-                        stdout=enmerged)
-                p3.communicate()
-                mergeme = enmerged
-            else:
-                mergeme = z_js_keys_file
+                print "Merging z-%s.po for %s" % (domain, locale)
 
-            mergeme.seek(0)
-            p4 = Popen(["msgmerge",
-                        "--update",
-                        "--no-fuzzy-matching",
-                        "--sort-output",
-                        "--width=200",
-                        z_js_messages,
-                        "-"],
-                        stdin=mergeme)
+                z_domain_keys_file = open(z_domain_keys)
 
-            p4.communicate()
-            mergeme.close()
+                if locale == "en_US":
+                    enmerged = TemporaryFile('w+t')
+                    p3 = Popen(["msgen", "-"], stdin=z_domain_keys_file,
+                            stdout=enmerged)
+                    p3.communicate()
+                    mergeme = enmerged
+                else:
+                    mergeme = z_domain_keys_file
 
-        print "finished"
+                mergeme.seek(0)
+                p4 = Popen(["msgmerge",
+                            "--update",
+                            "--no-fuzzy-matching",
+                            "--sort-output",
+                            "--width=200",
+                            z_domain_messages,
+                            "-"],
+                            stdin=mergeme)
+
+                p4.communicate()
+                mergeme.close()
+            print "Domain %s finished" % domain
+
+        print "All finished"

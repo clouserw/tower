@@ -17,6 +17,11 @@ from tower import strip_whitespace, add_context, split_context
 
 DEFAULT_DOMAIN = 'all'
 
+try:
+    standalone_domains = settings.STANDALONE_DOMAINS
+except AttributeError:
+    standalone_domains = ['javascript']
+
 OPTIONS_MAP = {
     '**.*': {'extensions': ",".join(settings.JINJA_CONFIG()['extensions'])},
 }
@@ -147,9 +152,9 @@ class Command(BaseCommand):
             catalog.savefile(os.path.join(root, 'locale', 'z-%s.pot' % domain))
 
         if len(domains) > 1:
-            print "Concatenating all domains except javascript..."
+            print "Concatenating all domains except the standalone ones..."
             pot_files = []
-            for i in [x for x in domains if x != "javascript"]:
+            for i in [x for x in domains if x not in standalone_domains]:
                 pot_files.append(os.path.join(root, 'locale', 'z-%s.pot' % i))
             z_keys = open(os.path.join(root, 'locale', 'z-keys.pot'), 'w+t')
             z_keys.truncate()
@@ -157,7 +162,7 @@ class Command(BaseCommand):
             p1 = Popen(command, stdout=z_keys)
             p1.communicate()
             z_keys.close()
-            for i in [x for x in domains if x != "javascript"]:
+            for i in [x for x in domains if x not in standalone_domains]:
                 os.remove(os.path.join(root, 'locale', 'z-%s.pot' % i))
 
         print 'done'
