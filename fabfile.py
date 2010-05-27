@@ -24,5 +24,10 @@ local = functools.partial(local, capture=False)
 def shell():
     local('django-admin.py shell')
 
-def test():
-    local('django-admin.py test')
+def test(pdb=False):
+    cmd = 'django-admin.py test'
+
+    if pdb:
+        cmd += ' --pdb --pdb-failures -s'
+
+    local(cmd)
