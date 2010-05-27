@@ -109,7 +109,6 @@ def _activate(locale):
     # into its cache for this locale, we have to update that too.
     t = copy.deepcopy(django_trans.translation(locale))
     t.set_language(locale)
-    django_trans._translations[locale] = t
     try:
         """When trying to load css, js, and images through the Django server
         gettext() throws an exception saying it can't find the .mo files.  I
@@ -124,9 +123,14 @@ def _activate(locale):
         bonus = gettext.translation(domain, path('locale'), [locale],
                                     django_trans.DjangoTranslation)
         t.merge(bonus)
+
+        # Overwrite t (defaults to en-US) with our real locale's plural form
+        t.plural = bonus.plural
+
     except IOError:
         pass
 
+    django_trans._translations[locale] = t
     return t
 
 
