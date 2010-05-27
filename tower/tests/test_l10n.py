@@ -34,6 +34,8 @@ n_lazy_strings['p_context'] = n_lazy('%d poodle please', '%d poodles please',
 def setup():
     tower.activate('xx')
 
+def setup_yy():
+    tower.activate('yy')
 
 def teardown():
     tower.deactivate_all()
@@ -184,6 +186,30 @@ def test_template_substitution_with_pluralization():
                 many lights !
             {% endtrans %}'''
     eq_(render(s), 'you found a pile of lights!')
+
+
+@with_setup(setup_yy, teardown)
+def test_template_substitution_with_many_plural_forms():
+    s = '''{% trans count=1 %}
+                There is {{ count }} monkey.
+            {% pluralize %}
+                There are {{ count }} monkeys.
+            {% endtrans %}'''
+    eq_(render(s), 'Monkey count: 1 (Plural: 0)')
+
+    s = '''{% trans count=3 %}
+                There is {{ count }} monkey.
+            {% pluralize %}
+                There are {{ count }} monkeys.
+            {% endtrans %}'''
+    eq_(render(s), 'Monkey count: 3 (Plural: 1)')
+
+    s = '''{% trans count=5 %}
+                There is {{ count }} monkey.
+            {% pluralize %}
+                There are {{ count }} monkeys.
+            {% endtrans %}'''
+    eq_(render(s), 'Monkey count: 5 (Plural: 2)')
 
 
 @with_setup(setup, teardown)

@@ -1,0 +1,21 @@
+# Tower example file.  Locale: yy
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Tower 0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-01-16 11:45-0800\n"
+"PO-Revision-Date: 2010-05-23 14:37+0100\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+
+# %1$s is the number of addons downloaded
+#: views/addons/home.thtml:56
+#, php-format
+msgid "There is %(count)s monkey."
+msgid_plural "There are %(count)s monkeys."
+msgstr[0] "Monkey count: %(count)s (Plural: 0)"
+msgstr[1] "Monkey count: %(count)s (Plural: 1)"
+msgstr[2] "Monkey count: %(count)s (Plural: 2)"
