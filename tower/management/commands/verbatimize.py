@@ -6,7 +6,7 @@ from django.core.management.base import BaseCommand
 from manage import settings
 
 class Command(BaseCommand):
-    """
+    help = """
     This will move the POT files created by tower's `extract` command in
     the locale directory to locale/templates/LC_MESSAGES which is recognized
     by Verbatim as a special directory for POT files. Optionally, the command
