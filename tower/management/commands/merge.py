@@ -13,8 +13,8 @@ except AttributeError:
     domains = [settings.TEXT_DOMAIN, 'javascript']
 
 class Command(BaseCommand):
-    help = """
-    This will update all locales' PO files by merging them with the POT files.
+
+    """Updates all locales' PO files by merging them with the POT files.
 
     The command looks for POT files in locale/templates/LC_MESSAGES, which is
     where software like Verbatim looks for them as well. Tower's `verbatimize`
@@ -97,3 +97,5 @@ class Command(BaseCommand):
             print "Domain %s finished" % domain
 
         print "All finished"
+
+Command.help = Command.__doc__
