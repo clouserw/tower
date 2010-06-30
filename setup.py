@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='tower',
-    version='0.3.3',
+    version='0.3.4',
     description='Pull strings from a variety of sources, collapse whitespace, '
                 'support context (msgctxt), and merging .pot files.',
     long_description=open('README.rst').read(),
