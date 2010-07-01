@@ -265,6 +265,9 @@ _('fligtar    \n\n\r\t  talking')
 # Test comments w/ plural and context
 # L10n: Turn down the volume
 ngettext('fligtar', 'many fligtars', 5, 'aticecreamshop')
+
+# Test lazy strings are extracted
+_lazy('a lazy string')
 """
 
 TEST_PO_OUTPUT = """\
@@ -304,6 +307,10 @@ msgid "fligtar"
 msgid_plural "many fligtars"
 msgstr[0] ""
 msgstr[1] ""
+
+#: filename:26
+msgid "a lazy string"
+msgstr ""
 """
 
 TEST_TEMPLATE_INPUT = """

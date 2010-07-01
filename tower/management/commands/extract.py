@@ -22,6 +22,11 @@ try:
 except AttributeError:
     standalone_domains = ['javascript']
 
+TOWER_KEYWORDS = dict(DEFAULT_KEYWORDS)
+
+if hasattr(settings, 'TOWER_KEYWORDS'):
+    TOWER_KEYWORDS.update(settings.TOWER_KEYWORDS)
+
 OPTIONS_MAP = {
     '**.*': {'extensions': ",".join(settings.JINJA_CONFIG()['extensions'])},
 }
@@ -143,7 +148,7 @@ class Command(BaseCommand):
             methods = settings.DOMAIN_METHODS[domain]
             extracted = extract_from_dir(root,
                                          method_map=methods,
-                                         keywords=DEFAULT_KEYWORDS,
+                                         keywords=TOWER_KEYWORDS,
                                          comment_tags=COMMENT_TAGS,
                                          callback=callback,
                                          options_map=OPTIONS_MAP,

@@ -25,3 +25,7 @@ def JINJA_CONFIG():
     return config
 
 DOMAIN_METHODS = { }
+
+TOWER_KEYWORDS = {
+    '_lazy': None,
+}
