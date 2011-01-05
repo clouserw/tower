@@ -20,18 +20,18 @@ class Command(BaseCommand):
     where software like Verbatim looks for them as well. Tower's `verbatimize`
     command can be used prior to running `merge` to copy the POT files to
     `locale/templates/LC_MESSAGES` if they were extracted to a different place.
-    
-    For a given POT file, if a corresponding PO file doesn't exist for a 
-    locale, the command will initialize it with `msginit`. This guarantees 
+
+    For a given POT file, if a corresponding PO file doesn't exist for a
+    locale, the command will initialize it with `msginit`. This guarantees
     that the newly created PO file has proper gettext metadata headers.
 
-    During merging (or initializing), the command will also look in 
+    During merging (or initializing), the command will also look in
     `locale/compendia` for a locale-specific compendium of translations
     (serving as a translation memory of sorts). The compendium file must
     be called `${locale}.compendium`, e.g. `es_ES.compendium` for Spanish.
-    The translations in the compendium will be used by gettext for fuzzy 
-    matching. 
-    
+    The translations in the compendium will be used by gettext for fuzzy
+    matching.
+
     """
 
     def handle(self, *args, **options):
@@ -48,12 +48,12 @@ class Command(BaseCommand):
 
             for locale in os.listdir(locale_dir):
                 if (not os.path.isdir(os.path.join(locale_dir, locale)) or
-                    locale.startswith('.') or 
+                    locale.startswith('.') or
                     locale == 'templates' or
                     locale == 'compendia'):
                             continue
 
-                compendium = os.path.join(locale_dir, 'compendia', 
+                compendium = os.path.join(locale_dir, 'compendia',
                                           '%s.compendium' % locale)
                 domain_po = os.path.join(locale_dir, locale, 'LC_MESSAGES',
                                          '%s.po' % domain)
@@ -84,7 +84,6 @@ class Command(BaseCommand):
                 mergeme.seek(0)
                 command = ["msgmerge",
                            "--update",
-                           "--sort-output",
                            "--width=200",
                            domain_po,
                            "-"]
