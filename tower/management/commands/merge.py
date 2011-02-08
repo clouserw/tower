@@ -8,9 +8,9 @@ from django.core.management.base import BaseCommand
 from manage import settings
 
 try:
-    domains = [settings.TEXT_DOMAIN] + settings.STANDALONE_DOMAINS
+    domains = settings.STANDALONE_DOMAINS
 except AttributeError:
-    domains = [settings.TEXT_DOMAIN, 'javascript']
+    domains = [settings.TEXT_DOMAIN]
 
 class Command(BaseCommand):
 
