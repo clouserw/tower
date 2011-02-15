@@ -26,3 +26,18 @@ Installation
 
     pip install -e git://github.com/clouserw/tower.git#egg=tower
 
+
+A note on ``safe``-ness
+-----------------------
+
+L10n strings are marked "safe" for Jinja2 automatically, so they will not be
+HTML-escaped::
+
+    {{ _('Hello <strong>World</strong>') }}
+
+This works as expected. When interpolating into an L10n string, however, it will
+be marked as "unsafe" and escaped, unless you use `jingo's
+<https://github.com/jbalogh/jingo/>`_ ``|fe()`` helper (which will escape the
+arguments but not the string they are interpolated into). Like this::
+
+    {{ _('Hello <strong>{0}</strong>')|fe(user.nickname) }}
