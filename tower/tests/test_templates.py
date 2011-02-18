@@ -1,12 +1,7 @@
 import jingo
+from jingo.tests.test_helpers import render
 import jinja2
 from test_utils import eq_
-
-
-def render(s, context={}):
-    """Render a template string."""
-    t = jingo.env.from_string(s)
-    return t.render(**context)
 
 
 def test_safe():
@@ -28,3 +23,19 @@ def test_format_nonsafe():
     tpl = '{{ _("Hello {0}")|f("<p>") }}'
     rendered = render(tpl)
     eq_(rendered, 'Hello &lt;p&gt;')
+
+
+def test_trans_tag():
+    """Trans block with tags should not be escaped."""
+    s = '{% trans %}this is a <b>test</b>{% endtrans %}'
+    eq_(render(s), 'this is a <b>test</b>')
+
+
+def test_trans_interpolation():
+    """Trans block with interpolation should be escaped."""
+    s = """
+        {% trans what="<a>" %}
+        this is a <b>{{ what }}</b>
+        {% endtrans %}
+        """.strip()
+    eq_(render(s), 'this is a <b>&lt;a&gt;</b>')
