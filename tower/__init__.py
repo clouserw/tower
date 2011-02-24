@@ -2,6 +2,7 @@ import copy
 import gettext
 import re
 
+import django
 from django.conf import settings
 from django.utils.functional import lazy
 from django.utils.importlib import import_module
@@ -85,7 +86,10 @@ def activate(locale):
     import jingo
     jingo.env.install_gettext_translations(Translation)
 
-    django_trans._active[currentThread()] = _activate(locale)
+    if django.VERSION >= (1, 3):
+        django_trans._active.value = _activate(locale)
+    else:
+        django_trans._active[currentThread()] = _activate(locale)
 
 
 def _activate(locale):
