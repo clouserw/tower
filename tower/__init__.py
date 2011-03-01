@@ -6,7 +6,6 @@ import django
 from django.conf import settings
 from django.utils.functional import lazy
 from django.utils.importlib import import_module
-from django.utils.thread_support import currentThread
 from django.utils.translation import (trans_real as django_trans,
                                       ugettext as django_ugettext,
                                       ungettext as django_nugettext)
@@ -89,6 +88,7 @@ def activate(locale):
     if django.VERSION >= (1, 3):
         django_trans._active.value = _activate(locale)
     else:
+        from django.utils.thread_support import currentThread
         django_trans._active[currentThread()] = _activate(locale)
 
 
