@@ -138,6 +138,10 @@ class Command(BaseCommand):
                     dest='outputdir',
                     help='The directory where extracted files will be placed. '
                          '(Default: %default)'),
+        make_option('-c', '--create',
+                    action='store_true', dest='create', default=False,
+                    help='Create output-dir if missing'),
+
             )
 
     def handle(self, *args, **options):
@@ -145,9 +149,13 @@ class Command(BaseCommand):
         outputdir = os.path.abspath(options.get('outputdir'))
 
         if not os.path.isdir(outputdir):
-            print ("Output directory must exist (%s). "
-                   "Specify one with --output-dir" % outputdir)
-            return "FAILURE\n"
+            if not options.get('create'):
+                print ("Output directory must exist (%s) unless -c option is "
+                       "given. "
+                       "Specify one with --output-dir" % outputdir)
+                return "FAILURE\n"
+            else:
+                os.makedirs(outputdir)
 
         if domains == "all":
             domains = settings.DOMAIN_METHODS.keys()
