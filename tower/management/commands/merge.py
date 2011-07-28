@@ -1,10 +1,10 @@
 import os
 import sys
+from optparse import make_option
 from subprocess import Popen
 from tempfile import TemporaryFile
 
 from django.core.management.base import BaseCommand
-
 from manage import settings
 
 try:
@@ -33,10 +33,22 @@ class Command(BaseCommand):
     matching.
 
     """
+    option_list = BaseCommand.option_list + (
+             make_option('-c', '--create',
+                    action="store_true", dest='create', default=False,
+                    help='Create locale subdirectories'),
 
+            )
     def handle(self, *args, **options):
 
         locale_dir = os.path.join(settings.ROOT, 'locale')
+
+        if options.get('create'):
+            for lang in settings.KNOWN_LANGUAGES:
+                d = os.path.join(locale_dir, lang.replace('-', '_'),
+                                 'LC_MESSAGES')
+                if not os.path.exists(d):
+                    os.makedirs(d)
 
         for domain in domains:
 
