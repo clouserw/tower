@@ -2,12 +2,9 @@ import os
 from optparse import make_option
 from subprocess import Popen
 import tempfile
-try:
-    from manage import settings
-except:
-    from django.conf import settings
 
 from django.core.management.base import BaseCommand
+from django.conf import settings
 
 from jinja2 import ext
 from babel.messages.extract import (DEFAULT_KEYWORDS, extract_from_dir,
