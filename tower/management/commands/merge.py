@@ -44,7 +44,7 @@ class Command(BaseCommand):
         locale_dir = os.path.join(settings.ROOT, 'locale')
 
         if options.get('create'):
-            for lang in settings.KNOWN_LANGUAGES:
+            for lang in getattr(settings, 'LANGUAGES', []):
                 d = os.path.join(locale_dir, lang.replace('-', '_'),
                                  'LC_MESSAGES')
                 if not os.path.exists(d):
