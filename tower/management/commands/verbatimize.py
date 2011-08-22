@@ -41,8 +41,12 @@ class Command(BaseCommand):
                 os.remove(template_pot)
             except OSError:
                 pass
-            os.rename(os.path.join(locale_dir, pot), template_pot)
-            print "  Copied %s to %s" % (pot, template_pot)
+            t_pot_dir = os.path.join(locale_dir, 'templates', 'LC_MESSAGES')
+            if os.path.exists(locale_dir) and os.path.exists(t_pot_dir):
+                os.rename(os.path.join(locale_dir, pot), template_pot)
+                print "  Copied %s to %s" % (pot, template_pot)
+            else:
+                raise Exception("Expected %s to exist... BAILING" % t_pot_dir)
         print "All done"
         
 Command.help = Command.__doc__

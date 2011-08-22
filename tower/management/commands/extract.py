@@ -178,7 +178,12 @@ class Command(BaseCommand):
                                          options_map=OPTIONS_MAP,
                                          )
             catalog = create_pofile_from_babel(extracted)
-            catalog.savefile(os.path.join(outputdir, '%s.pot' % domain))
+            locale_dir = os.path.join(root, 'locale')
+            if os.path.exists(locale_dir):
+                catalog.savefile(
+                    os.path.join(root, 'locale', 'z-%s.pot' % domain))
+            else:
+                raise Exception("Expected %s to exist... BAILING" % locale_dir)
 
         if len(domains) > 1:
             print ("Concatenating the non-standalone domains into %s.pot" %
