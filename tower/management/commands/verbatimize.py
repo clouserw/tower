@@ -2,8 +2,7 @@ import os
 from optparse import make_option
 
 from django.core.management.base import BaseCommand
-
-from manage import settings
+from django.conf import settings
 
 class Command(BaseCommand):
 

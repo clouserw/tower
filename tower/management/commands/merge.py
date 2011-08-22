@@ -5,7 +5,7 @@ from subprocess import Popen
 from tempfile import TemporaryFile
 
 from django.core.management.base import BaseCommand
-from manage import settings
+from django.conf import settings
 
 try:
     domains = settings.STANDALONE_DOMAINS
@@ -44,7 +44,7 @@ class Command(BaseCommand):
         locale_dir = os.path.join(settings.ROOT, 'locale')
 
         if options.get('create'):
-            for lang in settings.KNOWN_LANGUAGES:
+            for lang in getattr(settings, 'LANGUAGES', []):
                 d = os.path.join(locale_dir, lang.replace('-', '_'),
                                  'LC_MESSAGES')
                 if not os.path.exists(d):

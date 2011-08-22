@@ -4,8 +4,7 @@ from subprocess import Popen
 from tempfile import TemporaryFile
 
 from django.core.management.base import BaseCommand
-
-from manage import settings
+from django.conf import settings
 
 from translate.tools import pypo2phppo
 
