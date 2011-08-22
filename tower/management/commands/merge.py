@@ -17,9 +17,7 @@ class Command(BaseCommand):
     """Updates all locales' PO files by merging them with the POT files.
 
     The command looks for POT files in locale/templates/LC_MESSAGES, which is
-    where software like Verbatim looks for them as well. Tower's `verbatimize`
-    command can be used prior to running `merge` to copy the POT files to
-    `locale/templates/LC_MESSAGES` if they were extracted to a different place.
+    where software like Verbatim looks for them as well.
 
     For a given POT file, if a corresponding PO file doesn't exist for a
     locale, the command will initialize it with `msginit`. This guarantees
