@@ -57,10 +57,11 @@ def tweak_message(message):
         if len(message) == 2:
             message = add_context(message[1], message[0])
         elif len(message) == 3:
-            singular, plural, num = message
-            message = (strip_whitespace(singular),
-                       strip_whitespace(plural),
-                       num)
+            if all(isinstance(x, basestring) for x in message[:2]):
+                singular, plural, num = message
+                message = (strip_whitespace(singular),
+                           strip_whitespace(plural),
+                           num)
         elif len(message) == 4:
             singular, plural, num, ctxt = message
             message = (add_context(ctxt, strip_whitespace(singular)),
