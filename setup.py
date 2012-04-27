@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(
     name='tower',
@@ -10,7 +10,7 @@ setup(
     author_email='wclouser@mozilla.com',
     url='http://github.com/clouserw/tower',
     license='BSD',
-    packages=['tower'],
+    packages=find_packages(),
     include_package_data=True,
     zip_safe=False,
     classifiers=[
