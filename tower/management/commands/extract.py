@@ -181,13 +181,13 @@ class Command(BaseCommand):
             catalog = create_pofile_from_babel(extracted)
             catalog.savefile(os.path.join(outputdir, '%s.pot' % domain))
 
-        if len(domains) > 1:
+        pot_files = []
+        for i in [x for x in domains if x not in standalone_domains]:
+            pot_files.append(os.path.join(outputdir, '%s.pot' % i))
+
+        if len(pot_files) > 1:
             print ("Concatenating the non-standalone domains into %s.pot" %
                    TEXT_DOMAIN)
-
-            pot_files = []
-            for i in [x for x in domains if x not in standalone_domains]:
-                pot_files.append(os.path.join(outputdir, '%s.pot' % i))
 
             final_out = os.path.join(outputdir, '%s.pot' % TEXT_DOMAIN)
 
