@@ -114,22 +114,27 @@ def _activate(locale):
     t = copy.deepcopy(django_trans.translation(locale))
     t.set_language(locale)
     try:
-        """When trying to load css, js, and images through the Django server
-        gettext() throws an exception saying it can't find the .mo files.  I
-        suspect this has something to do with Django trying not to load
-        extra stuff for requests that won't need it.  I do know that I don't
-        want to try to debug it.  This is what Django does in their function
-        also.
-        """
-        #If you've got extra .mo files to load, this is the place.
-        path = import_module(settings.SETTINGS_MODULE).path
-        domain = getattr(settings, 'TEXT_DOMAIN', 'messages')
-        bonus = gettext.translation(domain, path('locale'), [locale],
-                                    django_trans.DjangoTranslation)
-        t.merge(bonus)
+        # When trying to load css, js, and images through the Django server
+        # gettext() throws an exception saying it can't find the .mo files.  I
+        # suspect this has something to do with Django trying not to load
+        # extra stuff for requests that won't need it.  I do know that I don't
+        # want to try to debug it.  This is what Django does in their function
+        # also.
+        #
+        # We check for SETTINGS_MODULE here because if it's not here, then
+        # it's possible we're in a test using override_settings and we don't
+        # want to flip out.
+        settings_module = getattr(settings, 'SETTINGS_MODULE', None)
+        if settings_module:
+            # If you've got extra .mo files to load, this is the place.
+            path = import_module(settings_module).path
+            domain = getattr(settings, 'TEXT_DOMAIN', 'messages')
+            bonus = gettext.translation(domain, path('locale'), [locale],
+                                        django_trans.DjangoTranslation)
+            t.merge(bonus)
 
-        # Overwrite t (defaults to en-US) with our real locale's plural form
-        t.plural = bonus.plural
+            # Overwrite t (defaults to en-US) with our real locale's plural form
+            t.plural = bonus.plural
 
     except IOError:
         pass
