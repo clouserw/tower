@@ -3,6 +3,7 @@ import base64
 import shutil
 from cStringIO import StringIO
 
+import django
 from django.utils import translation
 
 import jingo
@@ -123,6 +124,23 @@ def test_activate():
     tower.activate('xx')
     eq_(_('this is a test'), 'you ran a test!')
     tower.deactivate_all()
+
+
+def test_activate_with_override_settings_and_django_14():
+    # Django 1.4 includes a handy override_settings helper. When you
+    # use that, it must not include SETTINGS_MODULE in the settings.
+    # This tests that activating a locale doesn't throw an
+    # AssertionError because there's no SETTINGS_MODULE in settings.
+    if django.VERSION >= (1, 4):
+        from django.test.utils import override_settings
+        with override_settings():
+            tower.deactivate_all()
+            tower.activate('xx')
+            # String is the same because it couldn't find
+            # SETTINGS_MODULE and thus didn't pick up the right .mo
+            # files.
+            eq_(_('this is a test'), 'this is a test')
+            tower.deactivate_all()
 
 
 def test_cached_activate():
