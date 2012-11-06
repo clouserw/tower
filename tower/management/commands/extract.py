@@ -17,6 +17,12 @@ DEFAULT_DOMAIN = 'all'
 
 TEXT_DOMAIN = getattr(settings, 'TEXT_DOMAIN', 'messages')
 
+# JINJA_CONFIG can be a callable or a dict.
+if hasattr(settings.JINJA_CONFIG, '__call__'):
+    JINJA_CONFIG = settings.JINJA_CONFIG()
+else:
+    JINJA_CONFIG = settings.JINJA_CONFIG
+
 # By default, all the domains you speficy will be merged into one big
 # messages.po file.  If you want to separate a domain from the main .po file,
 # specify it in this list.  Make sure to include TEXT_DOMAIN in this list, even
@@ -32,7 +38,7 @@ if hasattr(settings, 'TOWER_KEYWORDS'):
     TOWER_KEYWORDS.update(settings.TOWER_KEYWORDS)
 
 OPTIONS_MAP = {
-    '**.*': {'extensions': ",".join(settings.JINJA_CONFIG()['extensions'])},
+    '**.*': {'extensions': ",".join(JINJA_CONFIG['extensions'])},
 }
 
 COMMENT_TAGS = ['L10n:']
