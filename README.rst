@@ -27,6 +27,17 @@ Installation
     pip install -e git://github.com/clouserw/tower.git#egg=tower
 
 
+Settings
+--------
+
+If you want to provide your own gettext and ngettext functions, set
+``TOWER_INSTALL_JINJA_TRANSLATIONS`` to ``False``, and in your project
+call ``jingo.env.install_gettext_translations`` or
+``jingo.env.install_gettext_callables``. Otherwise tower will ensure its
+gettext and ngettext functions are installed into Jinja2 on every call to
+``tower.activate()``.
+
+
 A note on ``safe``-ness
 -----------------------
 
@@ -41,3 +52,4 @@ be marked as "unsafe" and escaped, unless you use `jingo's
 arguments but not the string they are interpolated into). Like this::
 
     {{ _('Hello <strong>{0}</strong>')|fe(user.nickname) }}
+
