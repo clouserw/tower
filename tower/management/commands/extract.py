@@ -44,7 +44,7 @@ OPTIONS_MAP = {
 COMMENT_TAGS = ['L10n:']
 
 
-def tweak_message(message):
+def tweak_message(message, whitespace=False):
     """We piggyback on jinja2's babel_extract() (really, Babel's extract_*
     functions) but they don't support some things we need so this function will
     tweak the message.  Specifically:
@@ -55,9 +55,24 @@ def tweak_message(message):
 
         2) Babel doesn't support context (msgctxt).  We hack that in ourselves
             here.
+
+    :arg message: The message being translated. Either a basestring or
+        tuple.
+    :arg whitespace: Whether or not to keep whitespace.
+
+    :returns: the message
+
     """
+    # If we want to keep the whitespace, we switch strip_whitespace to
+    # the identity function. It's a little weird, but it's either that
+    # or do a bunch of if/else stuff below.
+    if whitespace:
+        _strip_whitespace = lambda x: x
+    else:
+        _strip_whitespace = strip_whitespace
+
     if isinstance(message, basestring):
-        message = strip_whitespace(message)
+        message = _strip_whitespace(message)
     elif isinstance(message, tuple):
         # A tuple of 2 has context, 3 is plural, 4 is plural with context
         if len(message) == 2:
@@ -65,13 +80,13 @@ def tweak_message(message):
         elif len(message) == 3:
             if all(isinstance(x, basestring) for x in message[:2]):
                 singular, plural, num = message
-                message = (strip_whitespace(singular),
-                           strip_whitespace(plural),
+                message = (_strip_whitespace(singular),
+                           _strip_whitespace(plural),
                            num)
         elif len(message) == 4:
             singular, plural, num, ctxt = message
-            message = (add_context(ctxt, strip_whitespace(singular)),
-                       add_context(ctxt, strip_whitespace(plural)),
+            message = (add_context(ctxt, _strip_whitespace(singular)),
+                       add_context(ctxt, _strip_whitespace(plural)),
                        num)
     return message
 
@@ -90,6 +105,16 @@ def extract_tower_template(fileobj, keywords, comment_tags, options):
             list(ext.babel_extract(fileobj, keywords, comment_tags, options)):
 
         message = tweak_message(message)
+
+        yield lineno, funcname, message, comments
+
+
+def extract_tower_text_template(fileobj, keywords, comment_tags, options):
+    for lineno, funcname, message, comments in \
+            list(ext.babel_extract(fileobj, keywords, comment_tags, options)):
+
+        # Tweak the message, but maintain whitespace
+        message = tweak_message(message, whitespace=True)
 
         yield lineno, funcname, message, comments
 
@@ -146,7 +171,7 @@ class Command(BaseCommand):
                     action='store_true', dest='create', default=False,
                     help='Create output-dir if missing'),
 
-            )
+        )
 
     def handle(self, *args, **options):
         domains = options.get('domain')

@@ -262,6 +262,16 @@ def test_extract_tower_template():
     eq_(TEST_TEMPLATE_OUTPUT, unicode(create_pofile_from_babel(output)))
 
 
+def test_extract_tower_text_template():
+    fileobj = StringIO(TEST_TEXT_TEMPLATE_INPUT)
+    method = 'tower.management.commands.extract.extract_tower_text_template'
+    output = fake_extract_from_dir(filename="filename", fileobj=fileobj,
+                                   method=method)
+
+    # god help you if these are ever unequal
+    eq_(TEST_TEXT_TEMPLATE_OUTPUT, unicode(create_pofile_from_babel(output)))
+
+
 TEST_PO_INPUT = """
 # Make sure multiple contexts stay separate
 _('fligtar')
@@ -393,5 +403,84 @@ msgstr[1] ""
 #. This string has a hat.
 #: filename:21
 msgid "Let me tell you about a string who spanned multiple lines."
+msgstr ""
+"""
+
+TEST_TEXT_TEMPLATE_INPUT = """
+  {{ _('sunshine') }}
+  {{ _('sunshine', 'nothere') }}
+  {{ _('sunshine', 'outside') }}
+
+  {# Regular comment, regular gettext #}
+  {% trans %}
+    I like pie.
+  {% endtrans %}
+
+  {# L10n: How many hours? #}
+  {% trans plural=4, count=4 %}
+    {{ count }} hour left
+  {% pluralize %}
+    {{ count }} hours left
+  {% endtrans %}
+
+  {{ ngettext("one", "many", 5) }}
+
+  {# L10n: This string has a hat. #}
+  {% trans %}
+  Let me tell you about a string
+  who spanned
+  multiple lines.
+  {% endtrans %}
+"""
+
+TEST_TEXT_TEMPLATE_OUTPUT = """\
+#: filename:2
+msgid "sunshine"
+msgstr ""
+
+#: filename:3
+msgctxt "nothere"
+msgid "sunshine"
+msgstr ""
+
+#: filename:4
+msgctxt "outside"
+msgid "sunshine"
+msgstr ""
+
+#: filename:7
+msgid ""
+"\\n"
+"    I like pie.\\n"
+"  "
+msgstr ""
+
+#. How many hours?
+#: filename:12
+msgid ""
+"\\n"
+"    %(count)s hour left\\n"
+"  "
+msgid_plural ""
+"\\n"
+"    %(count)s hours left\\n"
+"  "
+msgstr[0] ""
+msgstr[1] ""
+
+#: filename:18
+msgid "one"
+msgid_plural "many"
+msgstr[0] ""
+msgstr[1] ""
+
+#. This string has a hat.
+#: filename:21
+msgid ""
+"\\n"
+"  Let me tell you about a string\\n"
+"  who spanned\\n"
+"  multiple lines.\\n"
+"  "
 msgstr ""
 """
