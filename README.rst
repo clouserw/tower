@@ -41,3 +41,11 @@ be marked as "unsafe" and escaped, unless you use `jingo's
 arguments but not the string they are interpolated into). Like this::
 
     {{ _('Hello <strong>{0}</strong>')|fe(user.nickname) }}
+
+
+Run tests
+---------
+
+Run::
+
+    python run_tests.py
