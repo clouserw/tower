@@ -3,7 +3,6 @@ Django==1.4.1
 mock==1.0b1
 django-nose==1.1
 babel
-fabric
 jinja2
 translate-toolkit
 -e git://github.com/jbalogh/jingo.git#egg=jingo
