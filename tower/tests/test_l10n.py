@@ -1,12 +1,8 @@
-import os
-import base64
-import shutil
 from cStringIO import StringIO
 
 import django
 from django.utils import translation
 
-import jingo
 from jingo.tests.test_helpers import render
 
 from nose import with_setup
@@ -244,7 +240,7 @@ def test_template_gettext_functions():
 
 def test_extract_tower_python():
     fileobj = StringIO(TEST_PO_INPUT)
-    method = 'tower.management.commands.extract.extract_tower_python'
+    method = 'tower.extract_tower_python'
     output = fake_extract_from_dir(filename="filename", fileobj=fileobj,
                                    method=method)
 
@@ -254,12 +250,33 @@ def test_extract_tower_python():
 
 def test_extract_tower_template():
     fileobj = StringIO(TEST_TEMPLATE_INPUT)
+    method = 'tower.extract_tower_template'
+    output = fake_extract_from_dir(filename="filename", fileobj=fileobj,
+                                   method=method)
+
+    # god help you if these are ever unequal
+    eq_(TEST_TEMPLATE_OUTPUT, unicode(create_pofile_from_babel(output)))
+
+
+def test_extract_tower_python_backwards_compatible():
+    fileobj = StringIO(TEST_PO_INPUT)
+    method = 'tower.management.commands.extract.extract_tower_python'
+    output = fake_extract_from_dir(filename="filename", fileobj=fileobj,
+                                   method=method)
+
+    # god help you if these are ever unequal
+    eq_(TEST_PO_OUTPUT, unicode(create_pofile_from_babel(output)))
+
+
+def test_extract_tower_template_backwards_compatible():
+    fileobj = StringIO(TEST_TEMPLATE_INPUT)
     method = 'tower.management.commands.extract.extract_tower_template'
     output = fake_extract_from_dir(filename="filename", fileobj=fileobj,
                                    method=method)
 
     # god help you if these are ever unequal
     eq_(TEST_TEMPLATE_OUTPUT, unicode(create_pofile_from_babel(output)))
+
 
 
 TEST_PO_INPUT = """

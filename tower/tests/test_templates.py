@@ -1,7 +1,5 @@
-import jingo
 from jingo.tests.test_helpers import render
-import jinja2
-from test_utils import eq_
+from nose.tools import eq_
 
 
 def test_safe():
