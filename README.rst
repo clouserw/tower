@@ -21,7 +21,8 @@ Requirements
 * Jinja2 and Jingo
 * translate-toolkit
 
-See requirements.txt for details.
+See `requirements.txt <https://github.com/clouserw/tower/blob/master/requirements.txt>`_
+for details.
 
 
 Installation
