@@ -1,12 +1,8 @@
-import os
-import base64
-import shutil
 from cStringIO import StringIO
 
 import django
 from django.utils import translation
 
-import jingo
 from jingo.tests.test_helpers import render
 
 from nose import with_setup
