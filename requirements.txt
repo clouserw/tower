@@ -1,10 +1,10 @@
-# Requirements for building tests
-Django==1.4.1
-mock==1.0b1
-django-nose==1.1
+# Requirements for using tower
+Django==1.4.5
 babel
 jinja2
 translate-toolkit
 -e git://github.com/jbalogh/jingo.git#egg=jingo
--e git://github.com/jbalogh/test-utils.git#egg=test-utils
 
+# Requirements for running the tests
+django-nose==1.1
+mock==1.0.1
