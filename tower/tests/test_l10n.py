@@ -294,11 +294,11 @@ ngettext('a fligtar', 'many fligtars', 3, 'aticecreamshop')
 ngettext('a fligtar', 'many fligtars', 5, 'aticecreamshop')
 
 # Test comments
-# L10n: Turn up the volume
+# L10N: Turn up the volume
 _('fligtar    \n\n\r\t  talking')
 
 # Test comments w/ plural and context
-# L10n: Turn down the volume
+# l10n: Turn down the volume
 ngettext('fligtar', 'many fligtars', 5, 'aticecreamshop')
 
 # Test lazy strings are extracted
@@ -335,7 +335,7 @@ msgid_plural "many fligtars"
 msgstr[0] ""
 msgstr[1] ""
 
-#. L10n: Turn down the volume
+#. l10n: Turn down the volume
 #: filename:23
 msgctxt "aticecreamshop"
 msgid "fligtar"
@@ -358,7 +358,7 @@ TEST_TEMPLATE_INPUT = """
     I like pie.
   {% endtrans %}
 
-  {# L10n: How many hours? #}
+  {# l10N: How many hours? #}
   {% trans plural=4, count=4 %}
     {{ count }} hour left
   {% pluralize %}
