@@ -43,7 +43,7 @@ OPTIONS_MAP = {
     '**.*': {'extensions': ",".join(JINJA_CONFIG['extensions'])},
 }
 
-COMMENT_TAGS = ['L10n:']
+COMMENT_TAGS = ['L10n:', 'L10N:', 'l10n:', 'l10N:']
 
 
 def create_pounit(filename, lineno, message, comments):

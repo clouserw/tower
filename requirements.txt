@@ -1,6 +1,6 @@
 # Requirements for using tower
 Django==1.4.5
-babel
+babel==0.9.6
 jinja2
 translate-toolkit
 -e git://github.com/jbalogh/jingo.git#egg=jingo
