@@ -8,3 +8,6 @@ translate-toolkit
 # Requirements for running the tests
 django-nose==1.1
 mock==1.0.1
+
+# Requirements to build the docs
+Sphinx
