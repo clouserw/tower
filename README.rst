@@ -28,9 +28,13 @@ for details.
 Installation
 ============
 
+Install from pypi with::
+
+    pip install tower
+
 Source code is at `<http://github.com/clouserw/tower>`_.
 
-Install with::
+Install from GitHub with::
 
     pip install -e git://github.com/clouserw/tower.git#egg=tower
 
