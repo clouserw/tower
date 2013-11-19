@@ -3,7 +3,18 @@ Tower
 =====
 
 Tower provides some additional functionality to Jinja and it's i18n extension,
-and the Babel library.  Specifics:
+and the Babel library.
+
+* Author: Wil Clouser and contributors_
+* Licence: BSD
+* Compatibility: Python 2.6 and 2.7, Django 1.4, 1.5 and 1.6
+* Requirements: django, babel, jinja2, jingo and translate-toolkit
+* Project URL: https://github.com/clouserw/tower
+* Documentation: http://tower.readthedocs.org/en/latest/
+
+.. _contributors: https://github.com/clouserw/tower/contributors
+
+Specifics:
 
 - Pulls strings from a variety of sources: Python, JavaScript, and .lhtml files.
 - Collapses whitespace in all strings to prevent unwieldy msgids.
@@ -28,9 +39,13 @@ for details.
 Installation
 ============
 
+Install from pypi with::
+
+    pip install tower
+
 Source code is at `<http://github.com/clouserw/tower>`_.
 
-Install with::
+Install from GitHub with::
 
     pip install -e git://github.com/clouserw/tower.git#egg=tower
 
