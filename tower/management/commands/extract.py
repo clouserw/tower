@@ -75,7 +75,14 @@ def create_pofile_from_babel(extracted):
             catalog = po.pofile(inputfile="")
     except AttributeError:
         catalog = po.pofile(inputfile="")
-    for filename, lineno, message, comments in extracted:
+
+    for extracted_unit in extracted:
+        # Babel 1.3 has an additional value: context.
+        if len(extracted_unit) == 5
+            filename, lineno, message, comments, context = extracted_unit
+        else:
+            filename, lineno, message, comments = extracted_unit
+
         unit = create_pounit(filename, lineno, message, comments)
         catalog.addunit(unit)
     catalog.removeduplicates()
