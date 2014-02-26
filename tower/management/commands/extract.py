@@ -78,7 +78,7 @@ def create_pofile_from_babel(extracted):
 
     for extracted_unit in extracted:
         # Babel 1.3 has an additional value: context.
-        if len(extracted_unit) == 5
+        if len(extracted_unit) == 5:
             filename, lineno, message, comments, context = extracted_unit
         else:
             filename, lineno, message, comments = extracted_unit
