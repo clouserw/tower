@@ -144,7 +144,10 @@ class Command(BaseCommand):
                                          options_map=OPTIONS_MAP,
                                          )
             catalog = create_pofile_from_babel(extracted)
-            catalog.savefile(os.path.join(outputdir, '%s.pot' % domain))
+            if os.path.exists(outputdir):
+                catalog.savefile(os.path.join(outputdir, '%s.pot' % domain))
+            else:
+                raise Exception("Expected %s to exist... BAILING" % outputdir)
 
         pot_files = []
         for i in [x for x in domains if x not in standalone_domains]:

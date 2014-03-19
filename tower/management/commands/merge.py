@@ -1,7 +1,7 @@
 import os
 import sys
 from optparse import make_option
-from subprocess import Popen
+from subprocess import Popen, call, PIPE
 from tempfile import TemporaryFile
 
 from django.core.management.base import BaseCommand
@@ -70,6 +70,8 @@ class Command(BaseCommand):
 
                 if not os.path.isfile(domain_po):
                     print " Can't find (%s).  Creating..." % (domain_po)
+                    if not call(["which",  "msginit"], stdout=PIPE) == 0:
+                        raise Exception("You do not have gettext installed.")
                     p1 = Popen(["msginit",
                                 "--no-translator",
                                 "--locale=%s" % locale,
