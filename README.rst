@@ -2,6 +2,10 @@
 Tower
 =====
 
+.. image:: https://secure.travis-ci.org/clouserw/tower.png?branch=master
+   :alt: Build Status
+   :target: https://secure.travis-ci.org/clouserw/tower
+
 Tower provides some additional functionality to Jinja and it's i18n extension,
 and the Babel library.
 
@@ -171,3 +175,8 @@ Run tests
 Run::
 
     python run_tests.py
+
+To test on all supported versions of Python and Django::
+
+    $ pip install tox
+    $ tox

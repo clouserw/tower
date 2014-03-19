@@ -29,3 +29,5 @@ DOMAIN_METHODS = { }
 TOWER_KEYWORDS = {
     '_lazy': None,
 }
+
+SECRET_KEY = 'useless not secret key used for tests'
