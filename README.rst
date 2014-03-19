@@ -74,13 +74,13 @@ Then configure.
 
         DOMAIN_METHODS = {
             'messages': [
-                ('fjord/**.py', 'tower.tools.extract_tower_python'),
-                ('fjord/**.html', 'tower.tools.extract_tower_template'),
+                ('fjord/**.py', 'tower.extract_tower_python'),
+                ('fjord/**.html', 'tower.extract_tower_template'),
             ]
         }
 
-    Use ``tower.tools.extract_tower_python`` for Python files and
-    ``tower.tools.extract_tower_template`` for Jinja2 templates.
+    Use ``tower.extract_tower_python`` for Python files and
+    ``tower.extract_tower_template`` for Jinja2 templates.
 
     The l10n strings will be saved in a .pot file with the name of the
     domain. In the above example, it'd be ``messages.pot``.
