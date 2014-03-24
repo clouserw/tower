@@ -14,6 +14,11 @@ from babel.messages.extract import extract_python
 from jinja2 import ext
 
 
+INSTALL_JINJA_TRANSLATIONS = getattr(settings,
+                                     'TOWER_INSTALL_JINJA_TRANSLATIONS',
+                                     True)
+
+
 def ugettext(message, context=None):
     """Always return a stripped string, localized if possible"""
     stripped = strip_whitespace(message)
@@ -68,14 +73,10 @@ def strip_whitespace(message):
     return re.compile(r'\s+', re.UNICODE).sub(' ', message).strip()
 
 
-def activate(locale):
+def install_jinja_translations():
     """
-    Override django's utils.translation.activate().  Django forces files
-    to be named django.mo (http://code.djangoproject.com/ticket/6376).  Since
-    that's dumb and we want to be able to load different files depending on
-    what part of the site the user is in, we'll make our own function here.
+    Install our gettext and ngettext functions into Jinja2's environment.
     """
-
     class Translation(object):
         """
         We pass this object to jinja so it can find our gettext implementation.
@@ -87,6 +88,17 @@ def activate(locale):
 
     import jingo
     jingo.env.install_gettext_translations(Translation)
+
+
+def activate(locale):
+    """
+    Override django's utils.translation.activate().  Django forces files
+    to be named django.mo (http://code.djangoproject.com/ticket/6376).  Since
+    that's dumb and we want to be able to load different files depending on
+    what part of the site the user is in, we'll make our own function here.
+    """
+    if INSTALL_JINJA_TRANSLATIONS:
+        install_jinja_translations()
 
     if django.VERSION >= (1, 3):
         django_trans._active.value = _activate(locale)
