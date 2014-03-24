@@ -130,6 +130,17 @@ Then configure.
 
         path = lambda *args: os.path.abspath(os.path.join(ROOT, *args))
 
+``django.conf.settings.TOWER_INSTALL_JINJA_TRANSLATIONS``
+
+    **Default:** True
+
+    By default tower will ensure it's gettext and ngettext functions are
+    installed into Jinja2 on every call to ``tower.activate()``.  You likely
+    want this, but if you need to provide your own gettext and ngettext
+    functions, set this to ``False``, and in your project call
+    ``jingo.env.install_gettext_translations`` or
+    ``jingo.env.install_gettext_callables``.
+
 
 Usage
 =====

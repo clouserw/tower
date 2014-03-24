@@ -3,16 +3,19 @@ from cStringIO import StringIO
 import django
 from django.utils import translation
 
+import jingo
 from jingo.tests.test_helpers import render
 
+from mock import patch
 from nose import with_setup
-from nose.tools import eq_
+from nose.tools import eq_, ok_
 
 import tower
 from tower.tests.helpers import fake_extract_from_dir
 from tower import ugettext as _, ungettext as n_
 from tower import ugettext_lazy as _lazy, ungettext_lazy as n_lazy
 from tower.management.commands.extract import create_pofile_from_babel
+
 
 # Used for the _lazy() tests
 _lazy_strings = {}
@@ -31,11 +34,30 @@ n_lazy_strings['p_context'] = n_lazy('%d poodle please', '%d poodles please',
 def setup():
     tower.activate('xx')
 
+
 def setup_yy():
     tower.activate('yy')
 
+
 def teardown():
     tower.deactivate_all()
+
+
+def test_install_jinja_translations():
+    jingo.env.install_null_translations()
+    tower.activate('xx')
+    eq_(jingo.env.globals['gettext'], _)
+
+
+@patch.object(tower, 'INSTALL_JINJA_TRANSLATIONS', False)
+def test_no_install_jinja_translations():
+    """
+    Setting `TOWER_INSTALL_JINJA_TRANSLATIONS` to False should skip setting
+    the gettext and ngettext functions in the Jinja2 environment.
+    """
+    jingo.env.install_null_translations()
+    tower.activate('xx')
+    ok_(jingo.env.globals['gettext'] != _)
 
 
 @with_setup(setup, teardown)
@@ -184,6 +206,7 @@ def test_template_substitution():
             {{ user }}
             {% endtrans %}'''
     eq_(render(s), 'Hola wenzel')
+
 
 @with_setup(setup, teardown)
 def test_template_substitution_with_pluralization():
