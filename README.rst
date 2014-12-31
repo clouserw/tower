@@ -99,7 +99,26 @@ Then configure.
 
 ``django.conf.settings.TOWER_KEYWORDS``
 
-    TODO: Document this.
+    Gettext keywords are the actual names of the functions your application uses
+    to denote strings which should be extracted.  Babel defines a sane default
+    list in `DEFAULT_KEYWORDS
+    <https://github.com/mitsuhiko/babel/blob/af983/babel/messages/extract.py#L31>`_
+    which includes the regulars like _(), gettext(), ngettext(), etc.  If your
+    app uses different functions you'll need to define them here.  This setting
+    is a dictionary and the value follows `gettext's keywordspec
+    <http://www.gnu.org/software/gettext/manual/gettext.html#index-adding-keywords_002c-xgettext>`_.
+
+    If you set this, it is *merged* with Babel's DEFAULT_KEYWORDS setting.
+
+    Example::
+
+        # We lazy load strings in our classes so we can cache them and they are
+        # still localized in the right language for the end user.  This will let
+        # us use _lazy('Localized string').
+        TOWER_KEYWORDS = {
+            '_lazy': None,
+        }
+
 
 ``django.conf.settings.TOWER_ADD_HEADERS``
 
