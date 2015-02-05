@@ -18,8 +18,7 @@ def fake_extract_from_dir(filename, fileobj, method,
     """ We use Babel's exctract_from_dir() to pull out our gettext
     strings.  In the tests, I don't have a directory of files, I have StringIO
     objects.  So, we fake the original function with this one."""
-
-    for lineno, message, comments in extract(method, fileobj, keywords,
+    for lineno, message, comments, context in extract(method, fileobj, keywords,
             comment_tags, options):
 
         yield filename, lineno, message, comments
