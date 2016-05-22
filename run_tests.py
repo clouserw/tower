@@ -3,19 +3,16 @@
 import os
 import sys
 
+if __name__ == "__main__":
+    # Set up the environment for our test project.
+    ROOT = os.path.abspath(os.path.dirname(__file__))
 
-# Set up the environment for our test project.
-ROOT = os.path.abspath(os.path.dirname(__file__))
+    os.environ['DJANGO_SETTINGS_MODULE'] = 'tower-project.settings'
+    sys.path.insert(0, os.path.join(ROOT, 'examples'))
 
-os.environ['DJANGO_SETTINGS_MODULE'] = 'tower-project.settings'
-sys.path.insert(0, os.path.join(ROOT, 'examples'))
+    from django.core.management import execute_from_command_line
 
-# This can't be imported until after we've fiddled with the
-# environment.
-from django.test.utils import setup_test_environment
-setup_test_environment()
+    # Run the equivalent of "django-admin.py test"
+    sys.argv.insert(1, 'test')
 
-from django.core.management import call_command
-
-# Run the equivalent of "django-admin.py test"
-call_command('test')
+    execute_from_command_line(sys.argv)

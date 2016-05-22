@@ -1,13 +1,14 @@
 # Requirements for using tower
-Django==1.4.5
+Django>=1.4.5,<1.8
 babel==1.3
 jinja2
+six>=1.9.0
 translate-toolkit
 -e git://github.com/jbalogh/jingo.git#egg=jingo
 
 # Requirements for running the tests
-django-nose==1.1
-mock==1.0.1
+django-nose>=1.1
+mock>=1.0.1
 
 # Requirements to build the docs
 Sphinx

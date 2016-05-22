@@ -1,4 +1,4 @@
-from cStringIO import StringIO
+from io import BytesIO
 
 import django
 from django.utils import translation
@@ -262,7 +262,7 @@ def test_template_gettext_functions():
 
 
 def test_extract_tower_python():
-    fileobj = StringIO(TEST_PO_INPUT)
+    fileobj = BytesIO(TEST_PO_INPUT)
     method = 'tower.extract_tower_python'
     output = fake_extract_from_dir(filename="filename", fileobj=fileobj,
                                    method=method)
@@ -272,7 +272,7 @@ def test_extract_tower_python():
 
 
 def test_extract_tower_template():
-    fileobj = StringIO(TEST_TEMPLATE_INPUT)
+    fileobj = BytesIO(TEST_TEMPLATE_INPUT)
     method = 'tower.extract_tower_template'
     output = fake_extract_from_dir(filename="filename", fileobj=fileobj,
                                    method=method)
@@ -282,7 +282,7 @@ def test_extract_tower_template():
 
 
 def test_extract_tower_python_backwards_compatible():
-    fileobj = StringIO(TEST_PO_INPUT)
+    fileobj = BytesIO(TEST_PO_INPUT)
     method = 'tower.management.commands.extract.extract_tower_python'
     output = fake_extract_from_dir(filename="filename", fileobj=fileobj,
                                    method=method)
@@ -292,7 +292,7 @@ def test_extract_tower_python_backwards_compatible():
 
 
 def test_extract_tower_template_backwards_compatible():
-    fileobj = StringIO(TEST_TEMPLATE_INPUT)
+    fileobj = BytesIO(TEST_TEMPLATE_INPUT)
     method = 'tower.management.commands.extract.extract_tower_template'
     output = fake_extract_from_dir(filename="filename", fileobj=fileobj,
                                    method=method)

@@ -5,10 +5,18 @@ import re
 import django
 from django.conf import settings
 from django.utils.functional import lazy
-from django.utils.importlib import import_module
 from django.utils.translation import (trans_real as django_trans,
                                       ugettext as django_ugettext,
                                       ungettext as django_nugettext)
+try:
+    from importlib import import_module
+except ImportError:
+    from django.utils.importlib import import_module
+
+try:
+    from django.utils import six
+except ImportError:
+    import six
 
 from babel.messages.extract import extract_python
 from jinja2 import ext
@@ -52,8 +60,8 @@ def ungettext(singular, plural, number, context=None):
         return plural_stripped
     return ret
 
-ugettext_lazy = lazy(ugettext, unicode)
-ungettext_lazy = lazy(ungettext, unicode)
+ugettext_lazy = lazy(ugettext, six.text_type)
+ungettext_lazy = lazy(ungettext, six.text_type)
 
 
 def add_context(context, message):
