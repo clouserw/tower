@@ -6,8 +6,12 @@ from tower import strip_whitespace
 
 @jinja2.contextfunction
 def _gettext_alias(context, string, *args, **kw):
-    return jinja2.Markup(
-        context.resolve('gettext')(string, *args, **kw))
+    meth = context.resolve('gettext')
+    if jinja2.__version__ > '2.5':
+        str = meth(context, string, **kw)
+    else:
+        str = meth(string, *args, **kw)
+    return jinja2.Markup(str)
 
 
 class MozInternationalizationExtension(InternationalizationExtension):
