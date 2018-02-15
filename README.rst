@@ -11,7 +11,7 @@ and the Babel library.
 
 * Author: Wil Clouser and contributors_
 * Licence: BSD
-* Compatibility: Python 2.6 and 2.7, Django 1.4, 1.5 and 1.6
+* Compatibility: Python 2.7, Django 1.4, 1.5 and 1.6
 * Requirements: django, babel, jinja2, jingo and translate-toolkit
 * Project URL: https://github.com/clouserw/tower
 * Documentation: http://tower.readthedocs.org/en/latest/

@@ -43,10 +43,19 @@ def teardown():
     tower.deactivate_all()
 
 
+def get_jingo_env():
+    try:
+        return jingo.env
+    except Exception:
+        # jingo 0.8 requires get_env() instead.
+        return jingo.get_env()
+
 def test_install_jinja_translations():
-    jingo.env.install_null_translations()
+    env = get_jingo_env()
+
+    env.install_null_translations()
     tower.activate('xx')
-    eq_(jingo.env.globals['gettext'], _)
+    eq_(env.globals['gettext'], _)
 
 
 @patch.object(tower, 'INSTALL_JINJA_TRANSLATIONS', False)
@@ -55,9 +64,11 @@ def test_no_install_jinja_translations():
     Setting `TOWER_INSTALL_JINJA_TRANSLATIONS` to False should skip setting
     the gettext and ngettext functions in the Jinja2 environment.
     """
-    jingo.env.install_null_translations()
+    env = get_jingo_env()
+
+    env.install_null_translations()
     tower.activate('xx')
-    ok_(jingo.env.globals['gettext'] != _)
+    ok_(env.globals['gettext'] != _)
 
 
 @with_setup(setup, teardown)
