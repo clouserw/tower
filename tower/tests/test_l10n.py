@@ -1,4 +1,7 @@
-from cStringIO import StringIO
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from io import StringIO, BytesIO
 
 import django
 from django.utils import translation
@@ -43,10 +46,19 @@ def teardown():
     tower.deactivate_all()
 
 
+def get_jingo_env():
+    try:
+        return jingo.env
+    except Exception:
+        # jingo 0.8 requires get_env() instead.
+        return jingo.get_env()
+
 def test_install_jinja_translations():
-    jingo.env.install_null_translations()
+    env = get_jingo_env()
+
+    env.install_null_translations()
     tower.activate('xx')
-    eq_(jingo.env.globals['gettext'], _)
+    eq_(env.globals['gettext'], _)
 
 
 @patch.object(tower, 'INSTALL_JINJA_TRANSLATIONS', False)
@@ -55,9 +67,11 @@ def test_no_install_jinja_translations():
     Setting `TOWER_INSTALL_JINJA_TRANSLATIONS` to False should skip setting
     the gettext and ngettext functions in the Jinja2 environment.
     """
-    jingo.env.install_null_translations()
+    env = get_jingo_env()
+
+    env.install_null_translations()
     tower.activate('xx')
-    ok_(jingo.env.globals['gettext'] != _)
+    ok_(env.globals['gettext'] != _)
 
 
 @with_setup(setup, teardown)
@@ -116,16 +130,16 @@ def test_ungettext_not_found():
 
 @with_setup(setup, teardown)
 def test_ugettext_lazy():
-    eq_(unicode(_lazy_strings['nocontext']), 'you ran a test!')
-    eq_(unicode(_lazy_strings['context']), 'What time is it? (context=1)')
+    eq_(str(_lazy_strings['nocontext']), 'you ran a test!')
+    eq_(str(_lazy_strings['context']), 'What time is it? (context=1)')
 
 
 @with_setup(setup, teardown)
 def test_ungettext_lazy():
-    eq_(unicode(n_lazy_strings['s_nocontext']), 'you found a light!')
-    eq_(unicode(n_lazy_strings['p_nocontext']), 'you found a pile of lights!')
-    eq_(unicode(n_lazy_strings['s_context']), '%d poodle (context=1)')
-    eq_(unicode(n_lazy_strings['p_context']), '%d poodles (context=1)')
+    eq_(str(n_lazy_strings['s_nocontext']), 'you found a light!')
+    eq_(str(n_lazy_strings['p_nocontext']), 'you found a pile of lights!')
+    eq_(str(n_lazy_strings['s_context']), '%d poodle (context=1)')
+    eq_(str(n_lazy_strings['p_context']), '%d poodles (context=1)')
 
 
 def test_add_context():
@@ -262,47 +276,59 @@ def test_template_gettext_functions():
 
 
 def test_extract_tower_python():
-    fileobj = StringIO(TEST_PO_INPUT)
+    fileobj = BytesIO(TEST_PO_INPUT)
     method = 'tower.extract_tower_python'
     output = fake_extract_from_dir(filename="filename", fileobj=fileobj,
                                    method=method)
 
     # god help you if these are ever unequal
-    eq_(TEST_PO_OUTPUT, unicode(create_pofile_from_babel(output)))
+    out = BytesIO()
+    create_pofile_from_babel(output).serialize(out)
+    out.seek(0)
+    eq_(TEST_PO_OUTPUT, out.read())
 
 
 def test_extract_tower_template():
-    fileobj = StringIO(TEST_TEMPLATE_INPUT)
+    fileobj = BytesIO(TEST_TEMPLATE_INPUT)
     method = 'tower.extract_tower_template'
     output = fake_extract_from_dir(filename="filename", fileobj=fileobj,
                                    method=method)
 
     # god help you if these are ever unequal
-    eq_(TEST_TEMPLATE_OUTPUT, unicode(create_pofile_from_babel(output)))
+    out = BytesIO()
+    create_pofile_from_babel(output).serialize(out)
+    out.seek(0)
+    eq_(TEST_TEMPLATE_OUTPUT, out.read())
 
 
 def test_extract_tower_python_backwards_compatible():
-    fileobj = StringIO(TEST_PO_INPUT)
+    fileobj = BytesIO(TEST_PO_INPUT)
     method = 'tower.management.commands.extract.extract_tower_python'
     output = fake_extract_from_dir(filename="filename", fileobj=fileobj,
                                    method=method)
 
     # god help you if these are ever unequal
-    eq_(TEST_PO_OUTPUT, unicode(create_pofile_from_babel(output)))
+    out = BytesIO()
+    create_pofile_from_babel(output).serialize(out)
+    out.seek(0)
+    eq_(TEST_PO_OUTPUT, out.read())
 
 
 def test_extract_tower_template_backwards_compatible():
-    fileobj = StringIO(TEST_TEMPLATE_INPUT)
+    fileobj = BytesIO(TEST_TEMPLATE_INPUT)
     method = 'tower.management.commands.extract.extract_tower_template'
     output = fake_extract_from_dir(filename="filename", fileobj=fileobj,
                                    method=method)
 
     # god help you if these are ever unequal
-    eq_(TEST_TEMPLATE_OUTPUT, unicode(create_pofile_from_babel(output)))
+    out = BytesIO()
+    create_pofile_from_babel(output).serialize(out)
+    out.seek(0)
+    eq_(TEST_TEMPLATE_OUTPUT, out.read())
 
 
 
-TEST_PO_INPUT = """
+TEST_PO_INPUT = b"""
 # Make sure multiple contexts stay separate
 _('fligtar')
 _('fligtar', 'atwork')
@@ -328,7 +354,7 @@ ngettext('fligtar', 'many fligtars', 5, 'aticecreamshop')
 _lazy('a lazy string')
 """
 
-TEST_PO_OUTPUT = """\
+TEST_PO_OUTPUT = b"""\
 #: filename:3
 msgid "fligtar"
 msgstr ""
@@ -371,7 +397,7 @@ msgid "a lazy string"
 msgstr ""
 """
 
-TEST_TEMPLATE_INPUT = """
+TEST_TEMPLATE_INPUT = b"""
   {{ _('sunshine') }}
   {{ _('sunshine', 'nothere') }}
   {{ _('sunshine', 'outside') }}
@@ -398,7 +424,7 @@ TEST_TEMPLATE_INPUT = """
   {% endtrans %}
 """
 
-TEST_TEMPLATE_OUTPUT = """\
+TEST_TEMPLATE_OUTPUT = b"""\
 #: filename:2
 msgid "sunshine"
 msgstr ""

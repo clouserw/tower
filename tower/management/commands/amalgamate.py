@@ -1,3 +1,4 @@
+from __future__ import print_function
 import os
 import sys
 from subprocess import Popen
@@ -58,10 +59,10 @@ class Command(BaseCommand):
                                       'messages.po')
 
             if not os.path.isfile(r_messages):
-                print " Can't find (%s).  Skipping..." % (r_messages)
+                print(" Can't find (%s).  Skipping..." % (r_messages))
                 continue
 
-            print "Mushing python strings into messages.po for %s" % (locale)
+            print("Mushing python strings into messages.po for %s" % (locale))
 
             # Step 3: Merge our new combined .pot with the .po file
             if locale == "en_US":
@@ -90,7 +91,7 @@ class Command(BaseCommand):
         # commands in the middle of Step 3.
         for domain in standalone_domains:
 
-            print "Merging %s strings to each locale..." % domain
+            print("Merging %s strings to each locale..." % domain)
             z_domain_keys = os.path.join(locale_dir, 'z-%s.pot' % domain)
             if not os.path.isfile(z_domain_keys):
                 sys.exit("Can't find z-%s.pot" % domain)
@@ -104,11 +105,11 @@ class Command(BaseCommand):
                                                  'z-%s.po' % domain)
 
                 if not os.path.isfile(z_domain_messages):
-                    print " Can't find (%s).  Creating..." % (z_domain_messages)
+                    print(" Can't find (%s).  Creating..." % (z_domain_messages))
                     t = open(z_domain_messages, 'w')
                     t.close()
 
-                print "Merging z-%s.po for %s" % (domain, locale)
+                print("Merging z-%s.po for %s" % (domain, locale))
 
                 z_domain_keys_file = open(z_domain_keys)
 
@@ -133,6 +134,6 @@ class Command(BaseCommand):
 
                 p4.communicate()
                 mergeme.close()
-            print "Domain %s finished" % domain
+            print("Domain %s finished" % domain)
 
-        print "All finished"
+        print("All finished")

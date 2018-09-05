@@ -1,11 +1,14 @@
+from past.builtins import basestring
+from builtins import object
+from importlib import import_module
 import copy
 import gettext
 import re
 
 import django
 from django.conf import settings
+from django.utils import six
 from django.utils.functional import lazy
-from django.utils.importlib import import_module
 from django.utils.translation import (trans_real as django_trans,
                                       ugettext as django_ugettext,
                                       ungettext as django_nugettext)
@@ -52,8 +55,9 @@ def ungettext(singular, plural, number, context=None):
         return plural_stripped
     return ret
 
-ugettext_lazy = lazy(ugettext, unicode)
-ungettext_lazy = lazy(ungettext, unicode)
+
+ugettext_lazy = lazy(ugettext, six.text_type)
+ungettext_lazy = lazy(ungettext, six.text_type)
 
 
 def add_context(context, message):
@@ -87,7 +91,11 @@ def install_jinja_translations():
         ungettext = staticmethod(ungettext)
 
     import jingo
-    jingo.env.install_gettext_translations(Translation)
+    try:
+        jingo.env.install_gettext_translations(Translation)
+    except Exception:
+        # jingo 0.8 requires get_env() instead.
+        jingo.get_env().install_gettext_translations(Translation)
 
 
 def activate(locale):
@@ -116,6 +124,7 @@ def _activate(locale):
 
     # Django caches the translation objects here
     t = django_trans._translations.get(locale, None)
+
     if t is not None:
         return t
 
@@ -127,7 +136,9 @@ def _activate(locale):
     # our foreign catalog into en-US.  Since Django stuck the en-US catalog
     # into its cache for this locale, we have to update that too.
     t = copy.deepcopy(django_trans.translation(locale))
-    t.set_language(locale)
+    if hasattr(t, 'set_language'):
+        # not required for django 1.8+
+        t.set_language(locale)
     try:
         # When trying to load css, js, and images through the Django server
         # gettext() throws an exception saying it can't find the .mo files.  I
@@ -144,8 +155,8 @@ def _activate(locale):
             # If you've got extra .mo files to load, this is the place.
             path = import_module(settings_module).path
             domain = getattr(settings, 'TEXT_DOMAIN', 'messages')
-            bonus = gettext.translation(domain, path('locale'), [locale],
-                                        django_trans.DjangoTranslation)
+            bonus = gettext.translation(domain=domain, localedir=path('locale'), languages=[locale],
+                                        codeset='utf-8')
             t.merge(bonus)
 
             # Overwrite t (defaults to en-US) with our real locale's plural form

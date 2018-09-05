@@ -1,3 +1,6 @@
+from __future__ import print_function
+from io import StringIO
+
 import os
 import tempfile
 from optparse import make_option
@@ -72,9 +75,9 @@ def create_pofile_from_babel(extracted):
         if settings.TOWER_ADD_HEADERS:
             catalog = po.pofile()
         else:
-            catalog = po.pofile(inputfile="")
+            catalog = po.pofile(inputfile=StringIO(u""))
     except AttributeError:
-        catalog = po.pofile(inputfile="")
+        catalog = po.pofile(inputfile=StringIO(u""))
 
     for extracted_unit in extracted:
         # Babel 1.3 has an additional value: context.
@@ -121,7 +124,7 @@ class Command(BaseCommand):
                 os.makedirs(outputdir)
 
         if domains == "all":
-            domains = settings.DOMAIN_METHODS.keys()
+            domains = list(settings.DOMAIN_METHODS.keys())
         else:
             domains = [domains]
 
@@ -129,11 +132,11 @@ class Command(BaseCommand):
 
         def callback(filename, method, options):
             if method != 'ignore':
-                print "  %s" % filename
+                print("  %s" % filename)
 
         for domain in domains:
 
-            print "Extracting all strings in domain %s..." % (domain)
+            print("Extracting all strings in domain %s..." % (domain))
 
             methods = settings.DOMAIN_METHODS[domain]
             extracted = extract_from_dir(root,
@@ -179,4 +182,4 @@ class Command(BaseCommand):
             for i in [x for x in domains if x not in standalone_domains]:
                 os.remove(os.path.join(outputdir, '%s.pot' % i))
 
-        print 'done'
+        print('done')

@@ -18,4 +18,10 @@ setup_test_environment()
 from django.core.management import call_command
 
 # Run the equivalent of "django-admin.py test"
+try:
+    from django import setup
+    setup()
+except ImportError:
+    # Django 1.6 and below does not require setup()
+    pass
 call_command('test')
